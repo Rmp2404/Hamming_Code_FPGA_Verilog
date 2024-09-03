@@ -1,0 +1,34 @@
+`timescale 1ns/1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 31.08.2024 01:26:37
+// Design Name: 
+// Module Name: hamming__encoder
+// Project Name: Hamming Code
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module hamming_encoder(
+    input [3:0] data_in,
+    output [6:0] codeword_out
+);
+    // Parity bit calculations
+    wire p1 = data_in[0] ^ data_in[1] ^ data_in[3];
+    wire p2 = data_in[0] ^ data_in[2] ^ data_in[3];
+    wire p3 = data_in[1] ^ data_in[2] ^ data_in[3];
+
+    // Construct the codeword
+    assign codeword_out = {p3, p2, data_in[3], p1, data_in[2:0]};
+endmodule
