@@ -1,0 +1,77 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 31.08.2024 01:31:56
+// Design Name: 
+// Module Name: hamming_top_tb
+// Project Name: Hamming Code
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+/////////////////////////////////////////////////////////////////////////////////
+
+
+module hamming_top_tb();
+    reg [3:0] data_in;
+    reg clk;
+    wire [3:0] data_out;
+    wire error;
+    wire [6:0] codeword;
+
+    // Instantiate the top module
+    hamming_top uut (
+        .data_in(data_in),
+        .clk(clk),
+        .data_out(data_out),
+        .error(error)
+    );
+
+    assign codeword = uut.encoder.codeword_out;
+
+    // Clock generation
+    initial begin
+        clk = 0;
+        forever #5 clk = ~clk; // 10 time unit period
+    end
+
+    // Test vectors
+    initial begin
+        // Apply different data inputs and simulate error-free cases
+        data_in = 4'b1010; #20;
+        $display("Data in: %b, Encoded: %b, Decoded: %b, Error: %b", data_in, codeword, data_out, error);
+
+        data_in = 4'b1101; #20;
+        $display("Data in: %b, Encoded: %b, Decoded: %b, Error: %b", data_in, codeword, data_out, error);
+
+        data_in = 4'b0111; #20;
+        $display("Data in: %b, Encoded: %b, Decoded: %b, Error: %b", data_in, codeword, data_out, error);
+
+        data_in = 4'b0011; #20;
+        $display("Data in: %b, Encoded: %b, Decoded: %b, Error: %b", data_in, codeword, data_out, error);
+
+        // Introduce an error in the codeword manually
+        data_in = 4'b1101; #10;
+        #1; // Short delay to allow simulation to stabilize
+        force uut.encoder.codeword_out[4] = ~uut.encoder.codeword_out[4]; // Introduce error in the codeword
+        #20;
+        $display("Data in: %b, Encoded (with error): %b, Decoded: %b, Error detected: %b", data_in, codeword, data_out, error);
+
+        // Allow the decoder to correct the error
+        release uut.encoder.codeword_out[4]; // Release forced signal to allow normal operation
+        #10;
+        $display("Data in: %b, Corrected Codeword: %b, Corrected Data: %b, Error: %b", data_in, codeword, data_out, error);
+
+        #10;
+        $finish;
+    end
+endmodule
+
