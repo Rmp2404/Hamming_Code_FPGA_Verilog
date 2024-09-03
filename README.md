@@ -8,7 +8,8 @@ The code is written in Verilog and executed on an FPGA, with the primary use cas
 ## Project Structure
 - `hamming_encoder.v`: Verilog module for Hamming Code encoding.
 - `hamming_decoder.v`: Verilog module for Hamming Code decoding.
-- `hamming_tb.v`: Testbench for verifying the functionality of the encoder and decoder.
+- `hamming_top.v`: Verilog module for integrating the encoder and decoder.
+- `hamming_top_tb.v`: Testbench for verifying the functionality of the encoder and decoder.
 - `README.md`: Project documentation.
 - `.gitignore`: File specifying untracked files to ignore.
 
